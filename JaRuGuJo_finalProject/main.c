@@ -8,6 +8,7 @@
 #include "game.h"
 #include "graphics.h"
 #include "ranking.h"
+#include "music.h" //[수정]music 헤더파일 추가
 
 void run();
 
@@ -36,6 +37,8 @@ void run() {
 
     initGame(&game);
     strcpy(game.player.name, playerName);
+    
+    playBGM();  //[수정]게임 루프 시작 전 배경음 재생 시작
 
     while (!game.gameOver) {
         handleInput(&game);
@@ -50,6 +53,7 @@ void run() {
         Sleep(50);
     }
 
+    stopBGM(); //[수정]게임 루프 종료 후 배경음 재생 중지
     insertHeap(&rankings, game.player.name, game.player.score);
     saveRankings(&rankings);
 

@@ -130,11 +130,13 @@
     <ClCompile Include="game.c" />
     <ClCompile Include="graphics.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="music.c" />
     <ClCompile Include="ranking.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="music.h" />
     <ClInclude Include="ranking.h" />
   </ItemGroup>
   <ItemGroup>

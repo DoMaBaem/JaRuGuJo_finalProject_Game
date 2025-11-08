@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "game.h"
+#include "music.h" //[수정] music 헤더파일 추가
 
 void initPlayer(Player* player) {
     player->x = 5;
@@ -557,6 +558,7 @@ void updateEnemies(GameState* game) {
                 game->player.health -= damage;
                 game->player.invincible = 1;
                 game->player.invincibleTimer = 30;
+                playSFX(SFX_HIT); //[수정] 피격 효과음 재생
                 if (game->player.x < game->enemies[i].x) {
                     game->player.velocityX = -2;
                 }
@@ -609,6 +611,7 @@ void handleInput(GameState* game) {
             if (key == 72) {
                 if (game->player.onGround) {
                     game->player.velocityY = JUMP_POWER;
+                    playSFX(SFX_JUMP); //[수정] 점프 효과음 발생
                     addParticle(game, game->player.x, game->player.y + 1, '.');
                 }
             }
@@ -617,6 +620,7 @@ void handleInput(GameState* game) {
         if (key == ' ') {
             if (game->player.onGround) {
                 game->player.velocityY = JUMP_POWER;
+                playSFX(SFX_JUMP);     // [수정] 점프 효과음 재생
                 addParticle(game, game->player.x, game->player.y + 1, '.');
             }
         }
@@ -669,6 +673,7 @@ void checkGameOver(GameState* game) {
             game->player.invincibleTimer = 60;
         }
         else {
+            playSFX(SFX_DIE); //[수정] 죽음 효과음 재생
             game->gameOver = 1;
         }
     }
