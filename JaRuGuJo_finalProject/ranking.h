@@ -6,7 +6,7 @@
 #include <string.h>
 #include <windows.h>
 
-#define MAX_RANKINGS 100
+#define TOP_K 10
 #define RANKING_FILE "rankings.txt"
 
 typedef struct {
@@ -15,17 +15,17 @@ typedef struct {
 } RankingEntry;
 
 typedef struct {
-    RankingEntry data[MAX_RANKINGS];
+    RankingEntry data[TOP_K];
     int size;
-} MaxHeap;
+} MinHeap;
 
 void swap(RankingEntry* a, RankingEntry* b);
-void heapifyUp(MaxHeap* heap, int idx);
-void heapifyDown(MaxHeap* heap, int idx);
-void insertHeap(MaxHeap* heap, char* name, int score);
-RankingEntry extractMax(MaxHeap* heap);
-void loadRankings(MaxHeap* heap);
-void saveRankings(MaxHeap* heap);
-void displayRankings(MaxHeap* heap, char* currentPlayer, int currentScore);
+void heapifyUp(MinHeap* heap, int idx);
+void heapifyDown(MinHeap* heap, int idx);
+void insertHeap(MinHeap* heap, char* name, int score);
+RankingEntry extractMin(MinHeap* heap);
+void loadRankings(MinHeap* heap);
+void saveRankings(MinHeap* heap);
+void displayRankings(MinHeap* heap, char* currentPlayer, int currentScore);
 
 #endif

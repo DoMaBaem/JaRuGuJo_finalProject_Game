@@ -8,13 +8,13 @@
 #include "game.h"
 #include "graphics.h"
 #include "ranking.h"
-#include "music.h" //[¼öÁ¤]music Çì´õÆÄÀÏ Ãß°¡
+#include "music.h" //[ï¿½ï¿½ï¿½ï¿½]music ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 
 void run();
 
 void run() {
     GameState game;
-    MaxHeap rankings;
+    MinHeap rankings;
     char playerName[50];
 
     srand(time(NULL));
@@ -38,7 +38,7 @@ void run() {
     initGame(&game);
     strcpy(game.player.name, playerName);
     
-    playBGM();  //[¼öÁ¤]°ÔÀÓ ·çÇÁ ½ÃÀÛ Àü ¹è°æÀ½ Àç»ý ½ÃÀÛ
+    playBGM();  //[ï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     while (!game.gameOver) {
         handleInput(&game);
@@ -53,7 +53,7 @@ void run() {
         Sleep(50);
     }
 
-    stopBGM(); //[¼öÁ¤]°ÔÀÓ ·çÇÁ Á¾·á ÈÄ ¹è°æÀ½ Àç»ý ÁßÁö
+    stopBGM(); //[ï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     insertHeap(&rankings, game.player.name, game.player.score);
     saveRankings(&rankings);
 
