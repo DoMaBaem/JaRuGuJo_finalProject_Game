@@ -74,7 +74,7 @@ void drawPlatforms(GameState* game) {
 
 void drawEnemies(GameState* game) {
     for (int i = 0; i < game->enemyCount; i++) {
-        if (game->enemies[i].active) {
+        if (game->enemies[i].active && !game->enemies[i].isDead) {
             if (game->enemies[i].type == 0) {
                 drawToBuffer(game->enemies[i].x, game->enemies[i].y, 'M', 12);
             }
@@ -122,14 +122,23 @@ void drawHUD(GameState* game) {
 
     int healthColor = game->player.health > 50 ? 10 : (game->player.health > 25 ? 14 : 12);
 
-    sprintf(hud1, "Score: %d  Coins: %d  Health: %d  Lives: %d  Level: %d",
-        game->player.score, game->player.coins, game->player.health,
-        game->player.lives, game->level);
-    sprintf(hud2, "[A/D] Move [W/SPC] Jump [R] Restart [ESC] Quit | Red M:-15HP Blue W:-25HP");
-
-    for (int i = 0; hud1[i] != '\0' && i < WIDTH - 2; i++) {
-        drawToBuffer(2 + i, HEIGHT + 1, hud1[i], healthColor);
+    // 스테이지 클리어 체크
+    if (game->stageCleared) {
+        sprintf(hud1, "*** STAGE %d CLEARED! Press N for Next Stage ***", game->level);
+        for (int i = 0; hud1[i] != '\0' && i < WIDTH - 2; i++) {
+            drawToBuffer(2 + i, HEIGHT + 1, hud1[i], 14);
+        }
     }
+    else {
+        sprintf(hud1, "Score: %d/%d  Coins: %d  Health: %d  Lives: %d  Stage: %d",
+            game->player.score, game->targetScore, game->player.coins, game->player.health,
+            game->player.lives, game->level);
+        for (int i = 0; hud1[i] != '\0' && i < WIDTH - 2; i++) {
+            drawToBuffer(2 + i, HEIGHT + 1, hud1[i], healthColor);
+        }
+    }
+
+    sprintf(hud2, "[A/D] Move [W/SPC] Jump [R] Restart [N] Next Stage [ESC] Quit | Red M:-15HP Blue W:-25HP");
     for (int i = 0; hud2[i] != '\0' && i < WIDTH - 2; i++) {
         drawToBuffer(2 + i, HEIGHT + 2, hud2[i], 8);
     }

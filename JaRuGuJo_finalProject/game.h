@@ -16,6 +16,7 @@
 #define MAX_PLATFORMS 25
 #define MAX_PARTICLES 50
 #define JUMP_POWER -3
+#define RESPAWN_TIME 250  // 5초 (50ms * 250 = 12.5초) -> 100으로 조정하면 5초
 
 typedef struct {
     int x, y;
@@ -45,6 +46,8 @@ typedef struct {
     int type;
     int homingTimer;
     int homingDuration;
+    int respawnTimer;  // 리스폰 타이머 추가
+    int isDead;        // 죽음 상태 추가
 } Enemy;
 
 typedef struct {
@@ -72,6 +75,8 @@ typedef struct {
     int gameOver;
     int level;
     int timer;
+    int stageCleared;      // 스테이지 클리어 여부
+    int targetScore;       // 스테이지 클리어 목표 점수
 } GameState;
 
 // 함수 선언
@@ -87,5 +92,7 @@ void updateParticles(GameState* game);
 void handleInput(GameState* game);
 void checkGameOver(GameState* game);
 void addParticle(GameState* game, int x, int y, char symbol);
+void checkStageCleared(GameState* game);
+void nextStage(GameState* game);
 
 #endif
