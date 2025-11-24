@@ -45,6 +45,9 @@ typedef struct {
     int type;
     int homingTimer;
     int homingDuration;
+    int respawnTimer;
+    int initialX, initialY;
+    int initialVelocityX;
 } Enemy;
 
 typedef struct {

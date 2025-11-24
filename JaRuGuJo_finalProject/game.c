@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "game.h"
-#include "music.h" //[¼öÁ¤] music Çì´õÆÄÀÏ Ãß°¡
+#include "music.h" //[ï¿½ï¿½ï¿½ï¿½] music ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 
 void initPlayer(Player* player) {
     player->x = 5;
@@ -151,6 +151,10 @@ void initEnemies(GameState* game) {
     game->enemies[0].type = 0;
     game->enemies[0].homingTimer = 0;
     game->enemies[0].homingDuration = 0;
+    game->enemies[0].respawnTimer = 0;
+    game->enemies[0].initialX = 11;
+    game->enemies[0].initialY = HEIGHT - 5;
+    game->enemies[0].initialVelocityX = 1;
 
     game->enemies[1].x = 33;
     game->enemies[1].y = HEIGHT - 7;
@@ -159,6 +163,10 @@ void initEnemies(GameState* game) {
     game->enemies[1].type = 0;
     game->enemies[1].homingTimer = 0;
     game->enemies[1].homingDuration = 0;
+    game->enemies[1].respawnTimer = 0;
+    game->enemies[1].initialX = 33;
+    game->enemies[1].initialY = HEIGHT - 7;
+    game->enemies[1].initialVelocityX = -1;
 
     game->enemies[2].x = 18;
     game->enemies[2].y = HEIGHT - 9;
@@ -167,6 +175,10 @@ void initEnemies(GameState* game) {
     game->enemies[2].type = 1;
     game->enemies[2].homingTimer = 0;
     game->enemies[2].homingDuration = 0;
+    game->enemies[2].respawnTimer = 0;
+    game->enemies[2].initialX = 18;
+    game->enemies[2].initialY = HEIGHT - 9;
+    game->enemies[2].initialVelocityX = 2;
 
     game->enemies[3].x = 38;
     game->enemies[3].y = HEIGHT - 9;
@@ -175,6 +187,10 @@ void initEnemies(GameState* game) {
     game->enemies[3].type = 1;
     game->enemies[3].homingTimer = 0;
     game->enemies[3].homingDuration = 0;
+    game->enemies[3].respawnTimer = 0;
+    game->enemies[3].initialX = 38;
+    game->enemies[3].initialY = HEIGHT - 9;
+    game->enemies[3].initialVelocityX = -1;
 
     game->enemies[4].x = 58;
     game->enemies[4].y = HEIGHT - 9;
@@ -183,6 +199,10 @@ void initEnemies(GameState* game) {
     game->enemies[4].type = 1;
     game->enemies[4].homingTimer = 0;
     game->enemies[4].homingDuration = 0;
+    game->enemies[4].respawnTimer = 0;
+    game->enemies[4].initialX = 58;
+    game->enemies[4].initialY = HEIGHT - 9;
+    game->enemies[4].initialVelocityX = 2;
 
     game->enemies[5].x = 8;
     game->enemies[5].y = HEIGHT - 11;
@@ -191,6 +211,10 @@ void initEnemies(GameState* game) {
     game->enemies[5].type = 0;
     game->enemies[5].homingTimer = 0;
     game->enemies[5].homingDuration = 0;
+    game->enemies[5].respawnTimer = 0;
+    game->enemies[5].initialX = 8;
+    game->enemies[5].initialY = HEIGHT - 11;
+    game->enemies[5].initialVelocityX = 1;
 
     game->enemies[6].x = 28;
     game->enemies[6].y = HEIGHT - 11;
@@ -199,6 +223,10 @@ void initEnemies(GameState* game) {
     game->enemies[6].type = 1;
     game->enemies[6].homingTimer = 0;
     game->enemies[6].homingDuration = 0;
+    game->enemies[6].respawnTimer = 0;
+    game->enemies[6].initialX = 28;
+    game->enemies[6].initialY = HEIGHT - 11;
+    game->enemies[6].initialVelocityX = -2;
 
     game->enemies[7].x = 48;
     game->enemies[7].y = HEIGHT - 11;
@@ -207,6 +235,10 @@ void initEnemies(GameState* game) {
     game->enemies[7].type = 1;
     game->enemies[7].homingTimer = 0;
     game->enemies[7].homingDuration = 0;
+    game->enemies[7].respawnTimer = 0;
+    game->enemies[7].initialX = 48;
+    game->enemies[7].initialY = HEIGHT - 11;
+    game->enemies[7].initialVelocityX = 1;
 
     game->enemies[8].x = 68;
     game->enemies[8].y = HEIGHT - 11;
@@ -215,6 +247,10 @@ void initEnemies(GameState* game) {
     game->enemies[8].type = 1;
     game->enemies[8].homingTimer = 0;
     game->enemies[8].homingDuration = 0;
+    game->enemies[8].respawnTimer = 0;
+    game->enemies[8].initialX = 68;
+    game->enemies[8].initialY = HEIGHT - 11;
+    game->enemies[8].initialVelocityX = -2;
 
     game->enemies[9].x = 38;
     game->enemies[9].y = HEIGHT - 13;
@@ -223,6 +259,10 @@ void initEnemies(GameState* game) {
     game->enemies[9].type = 1;
     game->enemies[9].homingTimer = 0;
     game->enemies[9].homingDuration = 0;
+    game->enemies[9].respawnTimer = 0;
+    game->enemies[9].initialX = 38;
+    game->enemies[9].initialY = HEIGHT - 13;
+    game->enemies[9].initialVelocityX = 2;
 
     game->enemies[10].x = 12;
     game->enemies[10].y = HEIGHT - 15;
@@ -231,6 +271,10 @@ void initEnemies(GameState* game) {
     game->enemies[10].type = 1;
     game->enemies[10].homingTimer = 0;
     game->enemies[10].homingDuration = 0;
+    game->enemies[10].respawnTimer = 0;
+    game->enemies[10].initialX = 12;
+    game->enemies[10].initialY = HEIGHT - 15;
+    game->enemies[10].initialVelocityX = 2;
 
     game->enemies[11].x = 27;
     game->enemies[11].y = HEIGHT - 17;
@@ -239,6 +283,10 @@ void initEnemies(GameState* game) {
     game->enemies[11].type = 1;
     game->enemies[11].homingTimer = 0;
     game->enemies[11].homingDuration = 0;
+    game->enemies[11].respawnTimer = 0;
+    game->enemies[11].initialX = 27;
+    game->enemies[11].initialY = HEIGHT - 17;
+    game->enemies[11].initialVelocityX = -2;
 
     game->enemies[12].x = 47;
     game->enemies[12].y = HEIGHT - 19;
@@ -247,6 +295,10 @@ void initEnemies(GameState* game) {
     game->enemies[12].type = 1;
     game->enemies[12].homingTimer = 0;
     game->enemies[12].homingDuration = 0;
+    game->enemies[12].respawnTimer = 0;
+    game->enemies[12].initialX = 47;
+    game->enemies[12].initialY = HEIGHT - 19;
+    game->enemies[12].initialVelocityX = 2;
 
     game->enemies[13].x = 67;
     game->enemies[13].y = HEIGHT - 21;
@@ -255,6 +307,10 @@ void initEnemies(GameState* game) {
     game->enemies[13].type = 1;
     game->enemies[13].homingTimer = 0;
     game->enemies[13].homingDuration = 0;
+    game->enemies[13].respawnTimer = 0;
+    game->enemies[13].initialX = 67;
+    game->enemies[13].initialY = HEIGHT - 21;
+    game->enemies[13].initialVelocityX = -2;
 }
 
 void initCoins(GameState* game) {
@@ -542,6 +598,7 @@ void updateEnemies(GameState* game) {
 
             if (dx <= 1 && dy == -1 && game->player.velocityY > 0) {
                 game->enemies[i].active = 0;
+                game->enemies[i].respawnTimer = 300;
                 game->player.velocityY = -4;
                 if (game->enemies[i].type == 0) {
                     game->player.score += 100;
@@ -558,7 +615,7 @@ void updateEnemies(GameState* game) {
                 game->player.health -= damage;
                 game->player.invincible = 1;
                 game->player.invincibleTimer = 30;
-                playSFX(SFX_HIT); //[¼öÁ¤] ÇÇ°Ý È¿°úÀ½ Àç»ý
+                playSFX(SFX_HIT); //[ï¿½ï¿½ï¿½ï¿½] ï¿½Ç°ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 if (game->player.x < game->enemies[i].x) {
                     game->player.velocityX = -2;
                 }
@@ -568,6 +625,19 @@ void updateEnemies(GameState* game) {
                 game->player.velocityY = -2;
                 for (int j = 0; j < 3; j++) {
                     addParticle(game, game->player.x, game->player.y, '!');
+                }
+            }
+        }
+        else {
+            if (game->enemies[i].respawnTimer > 0) {
+                game->enemies[i].respawnTimer--;
+                if (game->enemies[i].respawnTimer == 0) {
+                    game->enemies[i].active = 1;
+                    game->enemies[i].x = game->enemies[i].initialX;
+                    game->enemies[i].y = game->enemies[i].initialY;
+                    game->enemies[i].velocityX = game->enemies[i].initialVelocityX;
+                    game->enemies[i].homingTimer = 0;
+                    game->enemies[i].homingDuration = 0;
                 }
             }
         }
@@ -611,7 +681,7 @@ void handleInput(GameState* game) {
             if (key == 72) {
                 if (game->player.onGround) {
                     game->player.velocityY = JUMP_POWER;
-                    playSFX(SFX_JUMP); //[¼öÁ¤] Á¡ÇÁ È¿°úÀ½ ¹ß»ý
+                    playSFX(SFX_JUMP); //[ï¿½ï¿½ï¿½ï¿½] ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
                     addParticle(game, game->player.x, game->player.y + 1, '.');
                 }
             }
@@ -620,7 +690,7 @@ void handleInput(GameState* game) {
         if (key == ' ') {
             if (game->player.onGround) {
                 game->player.velocityY = JUMP_POWER;
-                playSFX(SFX_JUMP);     // [¼öÁ¤] Á¡ÇÁ È¿°úÀ½ Àç»ý
+                playSFX(SFX_JUMP);     // [ï¿½ï¿½ï¿½ï¿½] ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 addParticle(game, game->player.x, game->player.y + 1, '.');
             }
         }
@@ -673,7 +743,7 @@ void checkGameOver(GameState* game) {
             game->player.invincibleTimer = 60;
         }
         else {
-            playSFX(SFX_DIE); //[¼öÁ¤] Á×À½ È¿°úÀ½ Àç»ý
+            playSFX(SFX_DIE); //[ï¿½ï¿½ï¿½ï¿½] ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             game->gameOver = 1;
         }
     }
