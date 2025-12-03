@@ -77,9 +77,10 @@ void drawEnemies(GameState* game) {
         if (game->enemies[i].active) {
             if (game->enemies[i].type == 0) {
                 drawToBuffer(game->enemies[i].x, game->enemies[i].y, 'M', 12);
-            }
-            else {
+            } else if (game->enemies[i].type == 1) {
                 drawToBuffer(game->enemies[i].x, game->enemies[i].y, 'W', 13);
+            } else if (game->enemies[i].type == 2) {
+                drawToBuffer(game->enemies[i].x, game->enemies[i].y, 'X', 5);
             }
         }
     }
@@ -90,6 +91,11 @@ void drawCoins(GameState* game) {
         if (!game->coins[i].collected) {
             drawToBuffer(game->coins[i].x, game->coins[i].y, '$', 14);
         }
+    }
+    
+    // 포탈 그리기
+    if (game->portal.active && !game->inHiddenStage) {
+        drawToBuffer(game->portal.x, game->portal.y, '@', 10); // 초록색 @
     }
 }
 
@@ -122,10 +128,15 @@ void drawHUD(GameState* game) {
 
     int healthColor = game->player.health > 50 ? 10 : (game->player.health > 25 ? 14 : 12);
 
-    sprintf(hud1, "Score: %d  Coins: %d  Health: %d  Lives: %d  Level: %d",
-        game->player.score, game->player.coins, game->player.health,
-        game->player.lives, game->level);
-    sprintf(hud2, "[A/D] Move [W/SPC] Jump [R] Restart [ESC] Quit | Red M:-15HP Blue W:-25HP");
+    if (game->inHiddenStage) {
+        sprintf(hud1, "HIDDEN STAGE! Time: %d  Score: %d  Coins: %d",
+            game->hiddenStageTimer / 20, game->player.score, game->player.coins);
+    } else {
+        sprintf(hud1, "Score: %d  Coins: %d  Health: %d  Lives: %d  Level: %d",
+            game->player.score, game->player.coins, game->player.health,
+            game->player.lives, game->level);
+    }
+    sprintf(hud2, "[A/D] Move [W/SPC] Jump [R] Restart [ESC] Quit | M:-15HP W:-25HP X:-30HP");
 
     for (int i = 0; hud1[i] != '\0' && i < WIDTH - 2; i++) {
         drawToBuffer(2 + i, HEIGHT + 1, hud1[i], healthColor);
@@ -144,5 +155,18 @@ void drawGame(GameState* game) {
     drawParticles(game);
     drawPlayer(game);
     drawHUD(game);
+    if (game->stageCleared) {
+        char msg1[] = "STAGE CLEAR!";
+        char msg2[] = "Press > to next stage";
+        int x1 = (WIDTH - strlen(msg1)) / 2;
+        int x2 = (WIDTH - strlen(msg2)) / 2;
+        int y = HEIGHT / 2;
+        for (int i = 0; msg1[i] != '\0'; i++) {
+            drawToBuffer(x1 + i, y, msg1[i], 14);
+        }
+        for (int i = 0; msg2[i] != '\0'; i++) {
+            drawToBuffer(x2 + i, y + 2, msg2[i], 11);
+        }
+    }
     renderBuffer();
 }

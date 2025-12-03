@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "game.h"
-#include "music.h" //[ºˆ¡§] music «Ï¥ı∆ƒ¿œ √ﬂ∞°
+#include "music.h" //[ÔøΩÔøΩÔøΩÔøΩ] music ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔø?ÔøΩﬂ∞ÔøΩ
 
 void initPlayer(Player* player) {
     player->x = 5;
@@ -19,6 +19,11 @@ void initPlayer(Player* player) {
 
 void initPlatforms(GameState* game) {
     game->platformCount = 24;
+    
+    // ?ÔøΩÌÉà ?ÔøΩÏ†ï (?ÔøΩÎû´??22 ??
+    game->portal.x = 47;
+    game->portal.y = HEIGHT - 19;
+    game->portal.active = 1;
 
     game->platforms[0].x = 1;
     game->platforms[0].y = HEIGHT - 2;
@@ -147,114 +152,32 @@ void initEnemies(GameState* game) {
     game->enemies[0].x = 11;
     game->enemies[0].y = HEIGHT - 5;
     game->enemies[0].velocityX = 1;
+    game->enemies[0].velocityY = 0;
     game->enemies[0].active = 1;
     game->enemies[0].type = 0;
     game->enemies[0].homingTimer = 0;
     game->enemies[0].homingDuration = 0;
+    game->enemies[0].respawnTimer = 0;
+    game->enemies[0].spawnX = 11;
+    game->enemies[0].spawnY = HEIGHT - 5;
 
-    game->enemies[1].x = 33;
-    game->enemies[1].y = HEIGHT - 7;
-    game->enemies[1].velocityX = -1;
-    game->enemies[1].active = 1;
-    game->enemies[1].type = 0;
-    game->enemies[1].homingTimer = 0;
-    game->enemies[1].homingDuration = 0;
-
-    game->enemies[2].x = 18;
-    game->enemies[2].y = HEIGHT - 9;
-    game->enemies[2].velocityX = 2;
-    game->enemies[2].active = 1;
-    game->enemies[2].type = 1;
-    game->enemies[2].homingTimer = 0;
-    game->enemies[2].homingDuration = 0;
-
-    game->enemies[3].x = 38;
-    game->enemies[3].y = HEIGHT - 9;
-    game->enemies[3].velocityX = -1;
-    game->enemies[3].active = 1;
-    game->enemies[3].type = 1;
-    game->enemies[3].homingTimer = 0;
-    game->enemies[3].homingDuration = 0;
-
-    game->enemies[4].x = 58;
-    game->enemies[4].y = HEIGHT - 9;
-    game->enemies[4].velocityX = 2;
-    game->enemies[4].active = 1;
-    game->enemies[4].type = 1;
-    game->enemies[4].homingTimer = 0;
-    game->enemies[4].homingDuration = 0;
-
-    game->enemies[5].x = 8;
-    game->enemies[5].y = HEIGHT - 11;
-    game->enemies[5].velocityX = 1;
-    game->enemies[5].active = 1;
-    game->enemies[5].type = 0;
-    game->enemies[5].homingTimer = 0;
-    game->enemies[5].homingDuration = 0;
-
-    game->enemies[6].x = 28;
-    game->enemies[6].y = HEIGHT - 11;
-    game->enemies[6].velocityX = -2;
-    game->enemies[6].active = 1;
-    game->enemies[6].type = 1;
-    game->enemies[6].homingTimer = 0;
-    game->enemies[6].homingDuration = 0;
-
-    game->enemies[7].x = 48;
-    game->enemies[7].y = HEIGHT - 11;
-    game->enemies[7].velocityX = 1;
-    game->enemies[7].active = 1;
-    game->enemies[7].type = 1;
-    game->enemies[7].homingTimer = 0;
-    game->enemies[7].homingDuration = 0;
-
-    game->enemies[8].x = 68;
-    game->enemies[8].y = HEIGHT - 11;
-    game->enemies[8].velocityX = -2;
-    game->enemies[8].active = 1;
-    game->enemies[8].type = 1;
-    game->enemies[8].homingTimer = 0;
-    game->enemies[8].homingDuration = 0;
-
-    game->enemies[9].x = 38;
-    game->enemies[9].y = HEIGHT - 13;
-    game->enemies[9].velocityX = 2;
-    game->enemies[9].active = 1;
-    game->enemies[9].type = 1;
-    game->enemies[9].homingTimer = 0;
-    game->enemies[9].homingDuration = 0;
-
-    game->enemies[10].x = 12;
-    game->enemies[10].y = HEIGHT - 15;
-    game->enemies[10].velocityX = 2;
-    game->enemies[10].active = 1;
-    game->enemies[10].type = 1;
-    game->enemies[10].homingTimer = 0;
-    game->enemies[10].homingDuration = 0;
-
-    game->enemies[11].x = 27;
-    game->enemies[11].y = HEIGHT - 17;
-    game->enemies[11].velocityX = -2;
-    game->enemies[11].active = 1;
-    game->enemies[11].type = 1;
-    game->enemies[11].homingTimer = 0;
-    game->enemies[11].homingDuration = 0;
-
-    game->enemies[12].x = 47;
-    game->enemies[12].y = HEIGHT - 19;
-    game->enemies[12].velocityX = 2;
-    game->enemies[12].active = 1;
-    game->enemies[12].type = 1;
-    game->enemies[12].homingTimer = 0;
-    game->enemies[12].homingDuration = 0;
-
-    game->enemies[13].x = 67;
-    game->enemies[13].y = HEIGHT - 21;
-    game->enemies[13].velocityX = -2;
-    game->enemies[13].active = 1;
-    game->enemies[13].type = 1;
-    game->enemies[13].homingTimer = 0;
-    game->enemies[13].homingDuration = 0;
+    int positions[][2] = {{33, HEIGHT-7}, {18, HEIGHT-9}, {38, HEIGHT-9}, {58, HEIGHT-9}, {8, HEIGHT-11}, {28, HEIGHT-11}, {48, HEIGHT-11}, {68, HEIGHT-11}, {38, HEIGHT-13}, {12, HEIGHT-15}, {27, HEIGHT-17}, {47, HEIGHT-19}, {67, HEIGHT-21}};
+    int velocities[] = {-1, 2, -1, 2, 1, -2, 1, -2, 2, 2, -2, 2, -2};
+    int types[] = {0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1};
+    
+    for (int i = 1; i < 14; i++) {
+        game->enemies[i].x = positions[i-1][0];
+        game->enemies[i].y = positions[i-1][1];
+        game->enemies[i].velocityX = velocities[i-1];
+        game->enemies[i].velocityY = 0;
+        game->enemies[i].active = 1;
+        game->enemies[i].type = types[i-1];
+        game->enemies[i].homingTimer = 0;
+        game->enemies[i].homingDuration = 0;
+        game->enemies[i].respawnTimer = 0;
+        game->enemies[i].spawnX = positions[i-1][0];
+        game->enemies[i].spawnY = positions[i-1][1];
+    }
 }
 
 void initCoins(GameState* game) {
@@ -511,8 +434,26 @@ void updatePlayer(GameState* game) {
 
 void updateEnemies(GameState* game) {
     for (int i = 0; i < game->enemyCount; i++) {
+        if (!game->enemies[i].active && game->enemies[i].respawnTimer > 0) {
+            game->enemies[i].respawnTimer--;
+            if (game->enemies[i].respawnTimer == 0) {
+                game->enemies[i].active = 1;
+                game->enemies[i].x = game->enemies[i].spawnX;
+                game->enemies[i].y = game->enemies[i].spawnY;
+            }
+        }
+        
         if (game->enemies[i].active) {
-            if (game->enemies[i].type == 1) {
+            if (game->enemies[i].type == 2) {
+                game->enemies[i].x += game->enemies[i].velocityX;
+                game->enemies[i].y += game->enemies[i].velocityY;
+                if (game->enemies[i].x <= 2 || game->enemies[i].x >= WIDTH - 3) {
+                    game->enemies[i].velocityX *= -1;
+                }
+                if (game->enemies[i].y <= 1 || game->enemies[i].y >= HEIGHT - 1) {
+                    game->enemies[i].velocityY *= -1;
+                }
+            } else if (game->enemies[i].type == 1) {
                 int speed = abs(game->enemies[i].velocityX);
                 if (game->enemies[i].homingDuration > 0) {
                     game->enemies[i].homingDuration--;
@@ -531,10 +472,11 @@ void updateEnemies(GameState* game) {
                 }
             }
 
-            game->enemies[i].x += game->enemies[i].velocityX;
-
-            if (game->enemies[i].x <= 2 || game->enemies[i].x >= WIDTH - 3) {
-                game->enemies[i].velocityX *= -1;
+            if (game->enemies[i].type != 2) {
+                game->enemies[i].x += game->enemies[i].velocityX;
+                if (game->enemies[i].x <= 2 || game->enemies[i].x >= WIDTH - 3) {
+                    game->enemies[i].velocityX *= -1;
+                }
             }
 
             int dx = abs(game->player.x - game->enemies[i].x);
@@ -542,23 +484,25 @@ void updateEnemies(GameState* game) {
 
             if (dx <= 1 && dy == -1 && game->player.velocityY > 0) {
                 game->enemies[i].active = 0;
+                game->enemies[i].respawnTimer = 100;
                 game->player.velocityY = -4;
                 if (game->enemies[i].type == 0) {
                     game->player.score += 100;
-                }
-                else {
+                } else if (game->enemies[i].type == 1) {
                     game->player.score += 150;
+                } else {
+                    game->player.score += 200;
                 }
                 for (int j = 0; j < 5; j++) {
                     addParticle(game, game->enemies[i].x, game->enemies[i].y, '*');
                 }
             }
             else if (dx <= 1 && dy == 0 && !game->player.invincible) {
-                int damage = (game->enemies[i].type == 0) ? 15 : 25;
+                int damage = (game->enemies[i].type == 0) ? 15 : (game->enemies[i].type == 1) ? 25 : 30;
                 game->player.health -= damage;
                 game->player.invincible = 1;
                 game->player.invincibleTimer = 30;
-                playSFX(SFX_HIT); //[ºˆ¡§] ««∞› »ø∞˙¿Ω ¿Áª˝
+                playSFX(SFX_HIT); //[ÔøΩÔøΩÔøΩÔøΩ] ÔøΩ«∞ÔøΩ »øÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔø?
                 if (game->player.x < game->enemies[i].x) {
                     game->player.velocityX = -2;
                 }
@@ -578,12 +522,29 @@ void updateCoins(GameState* game) {
     for (int i = 0; i < game->coinCount; i++) {
         if (!game->coins[i].collected) {
             if (abs(game->player.x - game->coins[i].x) <= 1 &&
-                abs(game->player.y - game->coins[i].y) <= 1) {
+                abs(game->player.y - game->coins[i].y) <= 1 &&
+                game->coins[i].y <= game->player.y) {
                 game->coins[i].collected = 1;
                 game->player.coins++;
                 game->player.score += 50;
                 addParticle(game, game->coins[i].x, game->coins[i].y, '+');
             }
+        }
+    }
+    
+    // ?ÔøΩÌÉà Ï∂©Îèå Í≤Ä??
+    if (game->portal.active && !game->inHiddenStage) {
+        if (abs(game->player.x - game->portal.x) <= 1 &&
+            abs(game->player.y - game->portal.y) <= 1) {
+            initHiddenStage(game);
+        }
+    }
+    
+    // ?ÔøΩÎì† ?ÔøΩÌÖå?ÔøΩÔøΩ? ?Ôø?ÔøΩÎ®∏
+    if (game->inHiddenStage) {
+        game->hiddenStageTimer--;
+        if (game->hiddenStageTimer <= 0) {
+            returnFromHiddenStage(game);
         }
     }
 }
@@ -610,17 +571,24 @@ void handleInput(GameState* game) {
             }
             if (key == 72) {
                 if (game->player.onGround) {
-                    game->player.velocityY = JUMP_POWER;
-                    playSFX(SFX_JUMP); //[ºˆ¡§] ¡°«¡ »ø∞˙¿Ω πﬂª˝
+                    int jumpPower = game->inHiddenStage ? -5 : JUMP_POWER;
+                    game->player.velocityY = jumpPower;
+                    playSFX(SFX_JUMP); //[ÔøΩÔøΩÔøΩÔøΩ] ÔøΩÔøΩÔøΩÔøΩ »øÔøΩÔøΩÔøΩÔøΩ ÔøΩﬂªÔøΩ
                     addParticle(game, game->player.x, game->player.y + 1, '.');
+                }
+            }
+            if (key == 80) {
+                if (game->player.onGround) {
+                    game->player.y += 2;
                 }
             }
         }
 
         if (key == ' ') {
             if (game->player.onGround) {
-                game->player.velocityY = JUMP_POWER;
-                playSFX(SFX_JUMP);     // [ºˆ¡§] ¡°«¡ »ø∞˙¿Ω ¿Áª˝
+                int jumpPower = game->inHiddenStage ? -5 : JUMP_POWER;
+                game->player.velocityY = jumpPower;
+                playSFX(SFX_JUMP);     // [ÔøΩÔøΩÔøΩÔøΩ] ÔøΩÔøΩÔøΩÔøΩ »øÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔø?
                 addParticle(game, game->player.x, game->player.y + 1, '.');
             }
         }
@@ -637,16 +605,48 @@ void handleInput(GameState* game) {
         
         if (key == 'w' || key == 'W') {
             if (game->player.onGround) {
-                game->player.velocityY = JUMP_POWER;
+                int jumpPower = game->inHiddenStage ? -5 : JUMP_POWER;
+                game->player.velocityY = jumpPower;
                 addParticle(game, game->player.x, game->player.y + 1, '.');
             }
         }
 
         if (key == 'r' || key == 'R') {
             initPlayer(&game->player);
-            initPlatforms(game);
-            initEnemies(game);
-            initCoins(game);
+            if (game->level == 1) {
+                initPlatforms(game);
+                initEnemies(game);
+                initCoins(game);
+            } else {
+                initStage2(game);
+            }
+        }
+        
+        if (key == ',' || key == '<') {
+            if (game->level > 1) {
+                game->level--;
+                game->player.x = 5;
+                game->player.y = HEIGHT - 3;
+                if (game->level == 1) {
+                    initPlatforms(game);
+                    initEnemies(game);
+                    initCoins(game);
+                } else {
+                    initStage2(game);
+                }
+            }
+        }
+        
+        if (key == '.' || key == '>') {
+            if (game->level < 2) {
+                nextStage(game);
+            }
+        }
+        
+        if (key == '/' || key == '?') {
+            if (!game->inHiddenStage) {
+                initHiddenStage(game);
+            }
         }
     }
     
@@ -673,7 +673,7 @@ void checkGameOver(GameState* game) {
             game->player.invincibleTimer = 60;
         }
         else {
-            playSFX(SFX_DIE); //[ºˆ¡§] ¡◊¿Ω »ø∞˙¿Ω ¿Áª˝
+            playSFX(SFX_DIE); //[ÔøΩÔøΩÔøΩÔøΩ] ÔøΩÔøΩÔøΩÔøΩ »øÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔø?
             game->gameOver = 1;
         }
     }
@@ -687,13 +687,127 @@ void checkGameOver(GameState* game) {
     }
 
     if (allCoinsCollected) {
-        game->level++;
         game->player.score += 500;
+        game->stageCleared = 1;
+        if (game->level < 2) {
+            Sleep(1500);
+            nextStage(game);
+        } else {
+            game->gameOver = 1;
+        }
+    }
+
+}
+
+void initStage2(GameState* game) {
+    game->platformCount = 20;
+    game->platforms[0].x = 1; game->platforms[0].y = HEIGHT - 2; game->platforms[0].width = 15; game->platforms[0].active = 1;
+    game->platforms[1].x = 25; game->platforms[1].y = HEIGHT - 2; game->platforms[1].width = 15; game->platforms[1].active = 1;
+    game->platforms[2].x = 50; game->platforms[2].y = HEIGHT - 2; game->platforms[2].width = 15; game->platforms[2].active = 1;
+    game->platforms[3].x = 8; game->platforms[3].y = HEIGHT - 5; game->platforms[3].width = 8; game->platforms[3].active = 1;
+    game->platforms[4].x = 22; game->platforms[4].y = HEIGHT - 6; game->platforms[4].width = 6; game->platforms[4].active = 1;
+    game->platforms[5].x = 35; game->platforms[5].y = HEIGHT - 8; game->platforms[5].width = 8; game->platforms[5].active = 1;
+    game->platforms[6].x = 50; game->platforms[6].y = HEIGHT - 7; game->platforms[6].width = 7; game->platforms[6].active = 1;
+    game->platforms[7].x = 65; game->platforms[7].y = HEIGHT - 9; game->platforms[7].width = 6; game->platforms[7].active = 1;
+    game->platforms[8].x = 12; game->platforms[8].y = HEIGHT - 10; game->platforms[8].width = 7; game->platforms[8].active = 1;
+    game->platforms[9].x = 28; game->platforms[9].y = HEIGHT - 12; game->platforms[9].width = 8; game->platforms[9].active = 1;
+    game->platforms[10].x = 45; game->platforms[10].y = HEIGHT - 13; game->platforms[10].width = 6; game->platforms[10].active = 1;
+    game->platforms[11].x = 60; game->platforms[11].y = HEIGHT - 11; game->platforms[11].width = 7; game->platforms[11].active = 1;
+    game->platforms[12].x = 5; game->platforms[12].y = HEIGHT - 15; game->platforms[12].width = 6; game->platforms[12].active = 1;
+    game->platforms[13].x = 20; game->platforms[13].y = HEIGHT - 17; game->platforms[13].width = 5; game->platforms[13].active = 1;
+    game->platforms[14].x = 35; game->platforms[14].y = HEIGHT - 18; game->platforms[14].width = 6; game->platforms[14].active = 1;
+    game->platforms[15].x = 50; game->platforms[15].y = HEIGHT - 16; game->platforms[15].width = 5; game->platforms[15].active = 1;
+    game->platforms[16].x = 65; game->platforms[16].y = HEIGHT - 19; game->platforms[16].width = 5; game->platforms[16].active = 1;
+    game->platforms[17].x = 15; game->platforms[17].y = HEIGHT - 21; game->platforms[17].width = 6; game->platforms[17].active = 1;
+    game->platforms[18].x = 40; game->platforms[18].y = HEIGHT - 22; game->platforms[18].width = 5; game->platforms[18].active = 1;
+    game->platforms[19].x = 60; game->platforms[19].y = HEIGHT - 23; game->platforms[19].width = 5; game->platforms[19].active = 1;
+    
+    game->enemyCount = 12;
+    int pos[][2] = {{10,HEIGHT-6},{25,HEIGHT-7},{38,HEIGHT-9},{52,HEIGHT-8},{67,HEIGHT-10},{15,HEIGHT-11},{30,HEIGHT-13},{47,HEIGHT-14}};
+    int vel[] = {2,-2,2,-2,2,-2,2,-2};
+    for (int i = 0; i < 8; i++) {
+        game->enemies[i].x = pos[i][0]; game->enemies[i].y = pos[i][1]; game->enemies[i].velocityX = vel[i]; game->enemies[i].velocityY = 0;
+        game->enemies[i].active = 1; game->enemies[i].type = 1; game->enemies[i].homingTimer = 0; game->enemies[i].homingDuration = 0;
+        game->enemies[i].respawnTimer = 0; game->enemies[i].spawnX = pos[i][0]; game->enemies[i].spawnY = pos[i][1];
+    }
+    int dpos[][2] = {{20,HEIGHT-15},{45,HEIGHT-18},{60,HEIGHT-12},{35,HEIGHT-20}};
+    int dvel[][2] = {{1,-1},{-1,1},{1,1},{-1,-1}};
+    for (int i = 0; i < 4; i++) {
+        game->enemies[8+i].x = dpos[i][0]; game->enemies[8+i].y = dpos[i][1];
+        game->enemies[8+i].velocityX = dvel[i][0]; game->enemies[8+i].velocityY = dvel[i][1];
+        game->enemies[8+i].active = 1; game->enemies[8+i].type = 2; game->enemies[8+i].homingTimer = 0; game->enemies[8+i].homingDuration = 0;
+        game->enemies[8+i].respawnTimer = 0; game->enemies[8+i].spawnX = dpos[i][0]; game->enemies[8+i].spawnY = dpos[i][1];
+    }
+    
+    game->coinCount = 20;
+    int cpos[][2] = {{10,HEIGHT-6},{24,HEIGHT-7},{37,HEIGHT-9},{52,HEIGHT-8},{67,HEIGHT-10},{14,HEIGHT-11},{30,HEIGHT-13},{47,HEIGHT-14},{62,HEIGHT-12},{7,HEIGHT-16},{22,HEIGHT-18},{37,HEIGHT-19},{52,HEIGHT-17},{67,HEIGHT-20},{17,HEIGHT-22},{42,HEIGHT-23},{62,HEIGHT-24},{32,HEIGHT-13},{48,HEIGHT-14},{70,HEIGHT-10}};
+    for (int i = 0; i < 20; i++) {
+        game->coins[i].x = cpos[i][0]; game->coins[i].y = cpos[i][1]; game->coins[i].collected = 0;
+    }
+}
+
+void initHiddenStage(GameState* game) {
+    game->inHiddenStage = 1;
+    game->hiddenStageTimer = 200; // 10Ôø?(200?ÔøΩÎ†à??
+    game->returnLevel = game->level;
+    
+    // Í∞ÑÎã®???ÔøΩÎû´??(Î∞îÎã•Ôø?
+    game->platformCount = 1;
+    game->platforms[0].x = 1;
+    game->platforms[0].y = HEIGHT - 2;
+    game->platforms[0].width = WIDTH - 2;
+    game->platforms[0].active = 1;
+    
+    // Î™¨Ïä§???ÔøΩÏùå
+    game->enemyCount = 0;
+    
+    // ÏΩîÏù∏ 50Ôø?(ÎßéÏù¥!)
+    for (int i = 0; i < MAX_COINS; i++) {
+        game->coins[i].collected = 1;
+    }
+    game->coinCount = 50;
+    for (int i = 0; i < 50; i++) {
+        game->coins[i].x = 3 + (i % 25) * 3;
+        game->coins[i].y = (i < 25) ? HEIGHT - 3 : HEIGHT - 7;
+        game->coins[i].collected = 0;
+    }
+    
+    // ?ÔøΩÌÉà ÎπÑÌôú?ÔøΩÌôî
+    game->portal.active = 0;
+    
+    // ?ÔøΩÎ†à?ÔøΩÏñ¥ ?ÔøΩÏπò
+    game->player.x = 5;
+    game->player.y = HEIGHT - 3;
+}
+
+void returnFromHiddenStage(GameState* game) {
+    game->inHiddenStage = 0;
+    game->hiddenStageTimer = 0;
+    game->level = game->returnLevel;
+    
+    if (game->level == 1) {
         initPlatforms(game);
         initEnemies(game);
         initCoins(game);
-        game->player.x = 5;
-        game->player.y = HEIGHT - 3;
+    } else {
+        initStage2(game);
+    }
+    
+    game->player.x = 5;
+    game->player.y = HEIGHT - 3;
+}
+
+void nextStage(GameState* game) {
+    game->stageCleared = 0;
+    game->level++;
+    game->player.x = 5;
+    game->player.y = HEIGHT - 3;
+    game->player.velocityX = 0;
+    game->player.velocityY = 0;
+    if (game->level == 2) {
+        initStage2(game);
+    } else {
+        game->gameOver = 1;
     }
 }
 
@@ -702,6 +816,10 @@ void initGame(GameState* game) {
     game->level = 1;
     game->timer = 0;
     game->particleCount = 0;
+    game->stageCleared = 0;
+    game->inHiddenStage = 0;
+    game->hiddenStageTimer = 0;
+    game->returnLevel = 1;
 
     for (int i = 0; i < MAX_PARTICLES; i++) {
         game->particles[i].life = 0;

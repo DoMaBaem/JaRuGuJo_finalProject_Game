@@ -12,7 +12,7 @@
 #define HEIGHT 25
 #define GRAVITY 1
 #define MAX_ENEMIES 15
-#define MAX_COINS 40
+#define MAX_COINS 60
 #define MAX_PLATFORMS 25
 #define MAX_PARTICLES 50
 #define JUMP_POWER -3
@@ -41,16 +41,25 @@ typedef struct {
 typedef struct {
     int x, y;
     int velocityX;
+    int velocityY;
     int active;
     int type;
     int homingTimer;
     int homingDuration;
+    int respawnTimer;
+    int spawnX;
+    int spawnY;
 } Enemy;
 
 typedef struct {
     int x, y;
     int collected;
 } Coin;
+
+typedef struct {
+    int x, y;
+    int active;
+} Portal;
 
 typedef struct {
     int x, y;
@@ -65,6 +74,7 @@ typedef struct {
     Enemy enemies[MAX_ENEMIES];
     Coin coins[MAX_COINS];
     Particle particles[MAX_PARTICLES];
+    Portal portal;
     int platformCount;
     int enemyCount;
     int coinCount;
@@ -72,6 +82,10 @@ typedef struct {
     int gameOver;
     int level;
     int timer;
+    int stageCleared;
+    int inHiddenStage;
+    int hiddenStageTimer;
+    int returnLevel;
 } GameState;
 
 // 함수 선언
@@ -87,5 +101,9 @@ void updateParticles(GameState* game);
 void handleInput(GameState* game);
 void checkGameOver(GameState* game);
 void addParticle(GameState* game, int x, int y, char symbol);
+void initStage2(GameState* game);
+void nextStage(GameState* game);
+void initHiddenStage(GameState* game);
+void returnFromHiddenStage(GameState* game);
 
 #endif
