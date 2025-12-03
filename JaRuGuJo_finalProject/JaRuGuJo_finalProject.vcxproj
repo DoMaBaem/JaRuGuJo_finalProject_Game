@@ -139,9 +139,6 @@
     <ClInclude Include="music.h" />
     <ClInclude Include="ranking.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="게임설명_및_MaxHeap_알고리즘.md" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

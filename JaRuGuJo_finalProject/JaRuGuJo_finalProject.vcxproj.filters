@@ -45,7 +45,4 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="게임설명_및_MaxHeap_알고리즘.md" />
-  </ItemGroup>
 </Project>

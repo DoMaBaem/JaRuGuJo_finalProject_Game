@@ -14,32 +14,52 @@
 - 체력: 100 (몬스터 충돌 시 감소)
 - 생명: 3개
 - 점수: 코인 획득 및 적 처치로 증가
-- 조작: A/D (좌우 이동), W/Space (점프)
+- 조작:
+  - **A/D 또는 ←/→**: 좌우 이동
+  - **W/Space 또는 ↑**: 점프
+  - **↓**: 플랫폼에서 아래로 내려가기
+  - **R**: 현재 스테이지 재시작
+  - **ESC**: 게임 종료
 
 ### 2.2 몬스터 (Enemy)
 - **Type 0 (Red 'M')**: 일반 몬스터, 데미지 15, 점수 100
 - **Type 1 (Blue 'W')**: 추적 몬스터, 데미지 25, 점수 150
   - 주기적으로 플레이어 추적 (Homing)
+- **Type 2 (Purple 'X')**: 비행 몬스터, 데미지 30, 점수 200
+  - 대각선으로 자유롭게 이동
 - 플랫폼 위를 좌우로 이동
 - 위에서 밟으면 처치 가능
+- 처치된 몬스터는 일정 시간 후 리스폰
 
 ### 2.3 코인 (Coin)
-- 총 38개 배치
+- **Stage 1**: 38개 배치
+- **Stage 2**: 20개 배치
+- **Hidden Stage**: 50개 배치
 - 획득 시 점수 +50
-- 모든 코인 수집 시 다음 레벨로 진행 (+500 보너스)
+- 모든 코인 수집 시 자동으로 다음 스테이지 진행 (+500 보너스)
+- 코인은 플레이어와 같은 높이이거나 위에 있을 때만 수집 가능
 
 ### 2.4 플랫폼 (Platform)
-- 총 24개의 블록
+- **Stage 1**: 24개의 블록
+- **Stage 2**: 20개의 블록
 - 다양한 높이와 위치에 배치
 - 플레이어가 점프하여 이동
+- 아래 방향키로 플랫폼을 통과하여 내려갈 수 있음
+
+### 2.5 포탈 (Portal)
+- Stage 1의 플랫폼 22 위에 위치 ('@' 초록색)
+- 포탈에 닿으면 히든 스테이지로 진입
+- 히든 스테이지는 10초 제한 시간
+- 히든 스테이지에서 코인 50개 수집 가능
+- 시간 종료 시 원래 스테이지로 복귀
 
 ---
 
-## 3. 랭킹 시스템 - 파일 기반 + Max Heap
+## 3. 랭킹 시스템 - 파일 기반 + Min Heap
 
 ### 3.1 시스템 구조
 ```
-rankings.txt (파일) → loadRankings() → Max Heap → displayRankings() → TOP 10
+rankings.txt (파일) → loadRankings() → Min Heap → displayRankings() → TOP 10
 ```
 
 ### 3.2 파일 기반 저장
@@ -47,19 +67,22 @@ rankings.txt (파일) → loadRankings() → Max Heap → displayRankings() → 
 - **형식**: `이름 점수` (공백으로 구분)
 - **영속성**: 게임 종료 후에도 데이터 유지
 
-### 3.3 Max Heap 자료구조 사용
+### 3.3 Min Heap 자료구조 사용
 ```c
 typedef struct {
-    RankingEntry data[MAX_RANKINGS];  // 최대 100개
+    RankingEntry data[TOP_K];  // 최대 10개
     int size;
-} MaxHeap;
+} MinHeap;
 ```
+- 루트 노드 = 10등 (최솟값)
+- 새 점수가 10등보다 높으면 루트 교체
+- TOP 10만 유지하여 메모리 효율적
 
 ---
 
-## 4. Max Heap 알고리즘 분석
+## 4. Min Heap 알고리즘 분석
 
-### 4.1 왜 Max Heap을 사용하는가?
+### 4.1 왜 Min Heap을 사용하는가?
 
 #### 문제 상황
 - 파일에서 N개의 랭킹 데이터 읽기
@@ -71,29 +94,29 @@ typedef struct {
 | 방법 | 삽입 | 최댓값 추출 | TOP 10 추출 | 공간 복잡도 |
 |------|------|-------------|-------------|-------------|
 | **배열 정렬** | O(1) | O(N log N) | O(N log N) | O(N) |
-| **Max Heap** | O(log N) | O(log N) | O(10 log N) | O(N) |
+| **Min Heap (TOP 10)** | O(log 10) | O(log 10) | O(10 log 10) | O(10) |
 
 ### 4.2 시간 복잡도 분석 (Big-O)
 
 #### 파일에서 N개 데이터 로딩
 ```
 배열 정렬: O(N) + O(N log N) = O(N log N)
-Max Heap:  O(N log N)  [N번 삽입, 각 O(log N)]
+Min Heap:  O(N log 10)  [N번 삽입, 각 O(log 10), 크기 10 유지]
 ```
 
 #### TOP 10 추출
 ```
 배열 정렬: O(N log N) [전체 정렬] + O(10) = O(N log N)
-Max Heap:  O(10 log N) [10번 extractMax]
+Min Heap:  O(10 log 10) [10번 정렬]
 ```
 
 #### 새 점수 추가 후 TOP 10 조회
 ```
 배열 정렬: O(1) [삽입] + O(N log N) [정렬] = O(N log N)
-Max Heap:  O(log N) [삽입] + O(10 log N) [추출] = O(log N)
+Min Heap:  O(log 10) [삽입] + O(10 log 10) [정렬] = O(1)
 ```
 
-### 4.3 Max Heap의 핵심 장점
+### 4.3 Min Heap의 핵심 장점
 
 #### ✅ 부분 정렬에 최적화
 - 전체 데이터를 정렬할 필요 없음
@@ -108,41 +131,43 @@ Max Heap:  O(log N) [삽입] + O(10 log N) [추출] = O(log N)
 #### ✅ 실시간 랭킹 업데이트
 ```c
 // 게임 종료 시
-insertHeap(&rankings, playerName, score);  // O(log N)
-saveRankings(&rankings);                   // O(N)
-displayRankings(&rankings, ...);           // O(10 log N)
+insertHeap(&rankings, playerName, score);  // O(log 10) = O(1)
+saveRankings(&rankings);                   // O(10)
+displayRankings(&rankings, ...);           // O(10 log 10)
 ```
+
+#### ✅ 메모리 효율성
+- 항상 TOP 10만 유지
+- 10등보다 낮은 점수는 저장하지 않음
+- 고정된 메모리 사용량 O(10)
 
 ### 4.4 구현된 핵심 함수
 
-#### insertHeap - O(log N)
+#### insertHeap - O(log 10) = O(1)
 ```c
-void insertHeap(MaxHeap* heap, char* name, int score) {
-    heap->data[heap->size] = {name, score};
-    heapifyUp(heap, heap->size);  // 상향 조정
-    heap->size++;
-}
-```
-
-#### extractMax - O(log N)
-```c
-RankingEntry extractMax(MaxHeap* heap) {
-    RankingEntry max = heap->data[0];  // 루트 = 최댓값
-    heap->data[0] = heap->data[heap->size - 1];
-    heap->size--;
-    heapifyDown(heap, 0);  // 하향 조정
-    return max;
-}
-```
-
-#### displayRankings - O(10 log N)
-```c
-void displayRankings(MaxHeap* heap, ...) {
-    MaxHeap tempHeap = *heap;  // 복사본 생성
-    for (int i = 0; i < 10; i++) {
-        top10[i] = extractMax(&tempHeap);  // 10번 추출
+void insertHeap(MinHeap* heap, char* name, int score) {
+    if (heap->size < TOP_K) {
+        // 10개 미만이면 삽입
+        heap->data[heap->size] = {name, score};
+        heapifyUp(heap, heap->size);
+        heap->size++;
+    } else if (score > heap->data[0].score) {
+        // 10등보다 높으면 루트 교체
+        heap->data[0] = {name, score};
+        heapifyDown(heap, 0);
     }
-    // 출력...
+}
+```
+
+#### displayRankings - O(10 log 10)
+```c
+void displayRankings(MinHeap* heap, ...) {
+    // 배열로 복사 후 버블 정렬 (내림차순)
+    RankingEntry top10[TOP_K];
+    for (int i = 0; i < heap->size; i++) {
+        top10[i] = heap->data[i];
+    }
+    // 정렬 및 출력...
 }
 ```
 
@@ -154,14 +179,15 @@ void displayRankings(MaxHeap* heap, ...) {
 
 | 작업 | 배열 정렬 | Max Heap | 성능 차이 |
 |------|-----------|----------|-----------|
-| 데이터 로딩 | O(100 log 100) ≈ 664 | O(100 log 100) ≈ 664 | 동일 |
-| TOP 10 추출 | O(100 log 100) ≈ 664 | O(10 log 100) ≈ 66 | **10배 빠름** |
-| 새 점수 추가 | O(100 log 100) ≈ 664 | O(log 100) ≈ 6.6 | **100배 빠름** |
+| 데이터 로딩 | O(100 log 100) ≈ 664 | O(100 log 10) ≈ 332 | **2배 빠름** |
+| TOP 10 추출 | O(100 log 100) ≈ 664 | O(10 log 10) ≈ 33 | **20배 빠름** |
+| 새 점수 추가 | O(100 log 100) ≈ 664 | O(log 10) ≈ 3.3 | **200배 빠름** |
 
 ### 결론
-- **일부 데이터만 필요한 경우 Max Heap이 압도적으로 효율적**
+- **TOP K 유지 시 Min Heap이 압도적으로 효율적**
 - 랭킹 시스템처럼 "상위 K개"만 필요한 경우 최적의 선택
-- 메모리 사용량은 동일하지만 시간 복잡도에서 큰 이득
+- 메모리 사용량 O(K)로 고정, 시간 복잡도 O(log K)로 매우 빠름
+- K=10일 때 거의 O(1) 수준의 성능
 
 ---
 
@@ -169,23 +195,88 @@ void displayRankings(MaxHeap* heap, ...) {
 
 ```
 1. 플레이어 이름 입력
-2. rankings.txt 파일에서 기존 랭킹 로드 → Max Heap 구성
-3. 게임 시작
-   - 플랫폼 점프
+2. rankings.txt 파일에서 기존 랭킹 로드 → Min Heap 구성
+3. 게임 시작 (Stage 1)
+   - 플랫폼 점프 및 이동
    - 코인 수집 (+50점)
-   - 몬스터 처치 (+100/+150점)
-   - 몬스터 충돌 시 체력 감소
-4. 게임 오버 (체력 0 또는 생명 소진)
-5. 새 점수를 Max Heap에 삽입
-6. rankings.txt에 저장
-7. TOP 10 랭킹 화면 표시
+   - 몬스터 처치 (+100/+150/+200점)
+   - 몬스터 충돌 시 체력 감소 및 무적 시간
+   - 포탈 진입 시 히든 스테이지 (10초 제한)
+4. Stage 1 코인 모두 수집 시
+   - "STAGE CLEAR!" 메시지 표시 (1.5초)
+   - 자동으로 Stage 2 진입
+5. Stage 2 코인 모두 수집 시
+   - 게임 종료
+6. 게임 오버 (체력 0 또는 생명 소진)
+7. 새 점수를 Min Heap에 삽입 (TOP 10 유지)
+8. rankings.txt에 저장
+9. TOP 10 랭킹 화면 표시 (현재 플레이어 강조)
 ```
 
 ---
 
-## 7. 기술 스택
+## 7. 스테이지 구성
+
+### Stage 1
+- 플랫폼: 24개
+- 몬스터: 14개 (Type 0, Type 1 혼합)
+- 코인: 38개
+- 포탈: 1개 (히든 스테이지 진입)
+
+### Stage 2
+- 플랫폼: 20개
+- 몬스터: 12개 (Type 1: 8개, Type 2: 4개)
+- 코인: 20개
+- 난이도 상승: 추적 몬스터와 비행 몬스터 증가
+
+### Hidden Stage
+- 플랫폼: 1개 (바닥만)
+- 몬스터: 없음
+- 코인: 50개 (2줄 배치)
+- 제한 시간: 10초
+- 점프력 증가 (빠른 수집 가능)
+- 시간 종료 시 원래 스테이지로 복귀
+
+---
+
+## 8. 기술 스택
 - **언어**: C
-- **자료구조**: Max Heap (우선순위 큐)
-- **파일 I/O**: 텍스트 파일 기반 영속성
+- **자료구조**: Min Heap (TOP 10 랭킹 유지)
+- **파일 I/O**: 텍스트 파일 기반 영속성 (rankings.txt)
 - **그래픽**: Windows Console API (더블 버퍼링)
-- **물리**: 중력, 점프, 충돌 감지
+- **물리**: 중력, 점프, 충돌 감지, 마찰력
+- **사운드**: 
+  - BGM: MCI API (무한 반복 재생)
+  - 효과음: PlaySound API (점프, 피격, 죽음)
+
+---
+
+## 9. 주요 기능
+
+### 9.1 더블 버퍼링
+- 화면 깜빡임 방지
+- 이전 프레임과 비교하여 변경된 부분만 렌더링
+- 부드러운 게임 플레이 경험
+
+### 9.2 파티클 시스템
+- 코인 수집 시: '+' 파티클
+- 몬스터 처치 시: '*' 파티클
+- 플레이어 피격 시: '!' 파티클
+- 점프 시: '.' 파티클
+- 중력 효과로 자연스러운 낙하
+
+### 9.3 무적 시간
+- 몬스터 충돌 시 30프레임 무적
+- 무적 상태에서 깜빡이는 효과
+- 넉백 효과 (밀려남)
+
+### 9.4 몬스터 AI
+- Type 1: 120프레임마다 80프레임 동안 플레이어 추적
+- Type 2: 대각선 이동, 벽과 천장에 반사
+- 리스폰 시스템: 처치 후 100프레임 후 재생성
+
+### 9.5 랭킹 시스템 (Min Heap)
+- TOP 10만 유지하여 메모리 효율적
+- 10등보다 높은 점수만 저장
+- O(log N) 삽입 시간
+- 파일 기반 영속성
