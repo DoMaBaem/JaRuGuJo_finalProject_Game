@@ -134,6 +134,7 @@ void run() {
             updateParticles(&game);
             checkGameOver(&game);
             drawGame(&game);
+            updateBGM();
 
             game.timer++;
             Sleep(50);

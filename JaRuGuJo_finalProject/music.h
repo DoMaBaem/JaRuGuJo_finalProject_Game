@@ -15,6 +15,7 @@ typedef enum {
 
 void playBGM();
 void stopBGM();
+void updateBGM(void);
 void playSFX(SoundEffectType type);
 
 #endif
