@@ -1,50 +1,36 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "music.h"
 
-// BGM ÆÄÀÏÀÇ º°Äª (Alias)
-// MCI ¸í·É¾î¿¡¼­ ÀÌ º°ÄªÀ» »ç¿ëÇØ ¹Ìµğ¾î¸¦ Á¦¾îÇÕ´Ï´Ù.
-#define BGM_ALIAS "BGM_Music" 
+// BGM ë³„ì¹­ (Alias)
+#define BGM_ALIAS "BGM_Music"
 
-// --- BGM °ü·Ã ÇÔ¼ö ±¸Çö (MCI API »ç¿ë) ---
-
-// ¹è°æ À½¾Ç Àç»ıÀ» ½ÃÀÛÇÏ°í ·çÇÁ ¼³Á¤À» ½ÃµµÇÏ´Â ÇÔ¼ö
+// BGM ì¬ìƒ í•¨ìˆ˜ (ë¬´í•œ ë°˜ë³µ)
 void playBGM() {
-    // 1. ±âÁ¸¿¡ ¿­·ÁÀÖ´Â BGM º°ÄªÀÌ ÀÖ´Ù¸é ´İ°í Àç¼³Á¤
-    // ¿À·ù°¡ ¹ß»ıÇØµµ ¹«½Ã (¾ÆÁ÷ ¿­·ÁÀÖÁö ¾ÊÀº °æ¿ì)
+    // ê¸°ì¡´ BGMì´ ìˆë‹¤ë©´ ë‹«ê¸°
     mciSendString("close " BGM_ALIAS, NULL, 0, NULL);
 
-    // 2. BGM ÆÄÀÏ (¿¹: bgm.mp3 ¶Ç´Â bgm.wav)À» ¿­°í º°ÄªÀ» ÁöÁ¤
-    // "mpegvideo" Å¸ÀÔÀº mp3¿Í °°Àº ¾ĞÃà ÆÄÀÏ¿¡ À¯¿ëÇÏ¸ç, "wait" ÇÃ·¡±×¸¦ »ç¿ëÇÏÁö ¾Ê¾Æ ºñµ¿±â Ã³¸®
+    // BGM íŒŒì¼ ì—´ê¸°
     if (mciSendString("open \"bgm.mp3\" type mpegvideo alias " BGM_ALIAS, NULL, 0, NULL) != 0) {
-        // ÆÄÀÏÀ» Ã£Áö ¸øÇÏ°Å³ª ¿­Áö ¸øÇßÀ» °æ¿ì
         printf("Error: Cannot open BGM file.\n");
         return;
     }
 
-    // 3. BGMÀ» ¹«ÇÑ ¹İº¹(repeat)ÇÏ¿© Àç»ı (ºñµ¿±â Ã³¸®)
+    // BGM ë¬´í•œ ë°˜ë³µ ì¬ìƒ
     mciSendString("play " BGM_ALIAS " repeat", NULL, 0, NULL);
 }
 
-// ¹è°æ À½¾Ç Àç»ıÀ» ÁßÁöÇÏ´Â ÇÔ¼ö
+// BGM ì •ì§€ í•¨ìˆ˜
 void stopBGM() {
-    // 1. Àç»ı ÁßÀÎ BGMÀ» Á¤Áö
     mciSendString("stop " BGM_ALIAS, NULL, 0, NULL);
-    // 2. MCI ÀÎ½ºÅÏ½º¸¦ ´İ¾Æ ¸Ş¸ğ¸® ÇØÁ¦
     mciSendString("close " BGM_ALIAS, NULL, 0, NULL);
 }
 
-
-// --- È¿°úÀ½ °ü·Ã ÇÔ¼ö ±¸Çö (PlaySound API »ç¿ë) ---
-
-// È¿°úÀ½À» Àç»ıÇÏ´Â ÇÔ¼ö (Á¡ÇÁ, ÇÇ°İ, Á×À½)
+// íš¨ê³¼ìŒ ì¬ìƒ í•¨ìˆ˜
 void playSFX(SoundEffectType type) {
     const char* soundPath;
 
-    // 1. Àç»ıÇÒ È¿°úÀ½ ÆÄÀÏ °æ·Î ¼³Á¤
     switch (type) {
     case SFX_JUMP:
-        // S_ASYNC: ºñµ¿±â Àç»ı (´ÙÀ½ ÄÚµå Áï½Ã ½ÇÇà, Áö¿¬ ¾øÀ½)
-        // S_NODEFAULT: ÆÄÀÏÀ» Ã£Áö ¸øÇØµµ ±âº» Windows ¼Ò¸®¸¦ Àç»ıÇÏÁö ¾ÊÀ½
         soundPath = "jump.wav";
         break;
     case SFX_HIT:
@@ -54,11 +40,8 @@ void playSFX(SoundEffectType type) {
         soundPath = "die.wav";
         break;
     default:
-        return; // Á¤ÀÇµÇÁö ¾ÊÀº Å¸ÀÔÀº ¹«½Ã
+        return;
     }
 
-    // 2. PlaySound¸¦ »ç¿ëÇÏ¿© È¿°úÀ½ Àç»ı
-    // S_ASYNC | S_NODEFAULT ÇÃ·¡±×¸¦ »ç¿ëÇØ Áßº¹ Àç»ıÀ» ½ÃµµÇÏ°í ´Ù¸¥ ÀÛ¾÷ ¹æÇØ¸¦ ÃÖ¼ÒÈ­
-    // PlaySound´Â ¸Å¹ø ÆÄÀÏ¿¡ Á¢±ÙÇÏ¹Ç·Î, PlaySound("jump.wav", ...)¸¦ ¿¬´Ş¾Æ È£ÃâÇÏ¸é Áßº¹ Àç»ı È¿°ú
     PlaySound(soundPath, NULL, SND_FILENAME | SND_ASYNC | SND_NODEFAULT);
 }

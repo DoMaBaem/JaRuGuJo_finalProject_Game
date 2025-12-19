@@ -1,34 +1,26 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include "game.h"
-#include "music.h"
+#include "music.h" //[����] music �������?�߰�
 
-// ================================================
-// 플레이어 초기화
-// 시작 위치, 체력, 생명 등 기본값 설정
-// ================================================
 void initPlayer(Player* player) {
-    player->x = 5;                  // 시작 X 좌표
-    player->y = HEIGHT - 3;         // 시작 Y 좌표 (바닥에서 3칸 위)
-    player->velocityY = 0;          // 수직 속도 초기화
-    player->velocityX = 0;          // 수평 속도 초기화
-    player->onGround = 0;           // 공중에 떠 있는 상태
-    player->health = 100;           // 최대 체력
-    player->score = 0;              // 점수 0으로 시작
-    player->coins = 0;              // 코인 0개
-    player->lives = 3;              // 생명 3개
-    player->invincible = 0;         // 무적 상태 아님
-    player->invincibleTimer = 0;    // 무적 타이머 0
-    player->direction = 'R';        // 기본 방향: 오른쪽
+    player->x = 5;
+    player->y = HEIGHT - 3;
+    player->velocityY = 0;
+    player->velocityX = 0;
+    player->onGround = 0;
+    player->health = 100;
+    player->score = 0;
+    player->coins = 0;
+    player->lives = 3;
+    player->invincible = 0;
+    player->invincibleTimer = 0;
+    player->direction = 'R';
 }
 
-// ================================================
-// Stage 1 플랫폼 초기화 (24개)
-// 다양한 높이와 너비로 점프 난이도 조절
-// ================================================
 void initPlatforms(GameState* game) {
-    game->platformCount = 24;  // 총 24개의 플랫폼
+    game->platformCount = 24;
     
-    // 포탈 위치 설정 (플랫폼 22번 위, 히든 스테이지 진입용)
+    // ?�탈 ?�정 (?�랫??22 ??
     game->portal.x = 47;
     game->portal.y = HEIGHT - 19;
     game->portal.active = 1;
@@ -385,13 +377,12 @@ void updateParticles(GameState* game) {
 void updatePlayer(GameState* game) {
     Player* player = &game->player;
 
-    // 중력 적용 (매 프레임마다 아래로 가속)
-    player->velocityY += GRAVITY;  // GRAVITY = 1
-    if (player->velocityY > 10) player->velocityY = 10;  // 최대 낙하 속도 제한
+    // 중력 적용
+    player->velocityY += GRAVITY;
+    if (player->velocityY > 10) player->velocityY = 10;
 
-    // 위치 업데이트 (속도를 좌표에 적용)
-    player->y += player->velocityY;  // 수직 이동
-    player->x += player->velocityX;  // 수평 이동
+    player->y += player->velocityY;
+    player->x += player->velocityX;
 
     // 화면 경계 체크
     if (player->x < 1) {
@@ -405,21 +396,18 @@ void updatePlayer(GameState* game) {
 
     player->onGround = 0;
 
-    // 플랫폼 충돌 검사 (모든 활성화된 플랫폼 확인)
+    // 플랫폼 충돌 검사
     for (int i = 0; i < game->platformCount; i++) {
         if (game->platforms[i].active) {
-            // 플레이어가 플랫폼 X 범위 내에 있는지 확인
             int onPlatformX = (player->x >= game->platforms[i].x && player->x < game->platforms[i].x + game->platforms[i].width);
             
             if (onPlatformX) {
-                // 플레이어가 플랫폼 위에 정확히 있을 때
                 if (player->y == game->platforms[i].y && player->velocityY >= 0) {
-                    player->velocityY = 0;  // 낙하 중지
-                    player->onGround = 1;   // 지상 상태로 변경
+                    player->velocityY = 0;
+                    player->onGround = 1;
                 }
-                // 플레이어가 플랫폼을 약간 통과했을 때 (보정)
                 else if (player->y > game->platforms[i].y && player->y <= game->platforms[i].y + 1 && player->velocityY > 0) {
-                    player->y = game->platforms[i].y;  // 플랫폼 위로 위치 보정
+                    player->y = game->platforms[i].y;
                     player->velocityY = 0;
                     player->onGround = 1;
                 }
@@ -427,19 +415,18 @@ void updatePlayer(GameState* game) {
         }
     }
 
-    // 낙사 처리 (화면 바닥으로 떨어짐)
+    // 낙사 처리
     if (player->y >= HEIGHT - 1) {
-        player->lives--;  // 생명 1개 감소
+        player->lives--;
         if (player->lives > 0) {
-            // 생명이 남아있으면 리스폰
-            player->health = 100;       // 체력 회복
-            player->x = 5;              // 시작 위치로 복귀
+            player->health = 100;
+            player->x = 5;
             player->y = HEIGHT - 3;
-            player->velocityY = 0;      // 속도 초기화
+            player->velocityY = 0;
             player->velocityX = 0;
         }
         else {
-            player->health = 0;  // 생명 0개면 게임 오버
+            player->health = 0;
         }
     }
 
@@ -451,18 +438,15 @@ void updatePlayer(GameState* game) {
         }
     }
 
-    // 마찰력 적용 (속도 감소)
+    // 마찰력 적용
     if (!player->invincible || player->invincibleTimer < 20) {
         if (player->onGround && player->velocityX != 0) {
-            // 지상에서 이동 중: 0.8배 감소 (강한 마찰)
             player->velocityX = (int)(player->velocityX * 0.8);
         } else if (!player->onGround) {
-            // 공중에서 이동: 0.95배 감소 (약한 공기 저항)
             player->velocityX = (int)(player->velocityX * 0.95);
         }
     }
     else {
-        // 무적 상태: 0.8배 감소
         player->velocityX = (int)(player->velocityX * 0.8);
     }
 }
@@ -537,7 +521,7 @@ void updateEnemies(GameState* game) {
                 game->player.health -= damage;
                 game->player.invincible = 1;
                 game->player.invincibleTimer = 30;
-                playSFX(SFX_HIT); 
+                playSFX(SFX_HIT); //[����] �ǰ� ȿ���� ���?
                 if (game->player.x < game->enemies[i].x) {
                     game->player.velocityX = -2;
                 }
@@ -571,6 +555,7 @@ void updateCoins(GameState* game) {
         }
     }
     
+    // ?�탈 충돌 검??
     if (game->portal.active && !game->inHiddenStage) {
         if (abs(game->player.x - game->portal.x) <= 1 &&
             abs(game->player.y - game->portal.y) <= 1) {
@@ -578,6 +563,7 @@ void updateCoins(GameState* game) {
         }
     }
     
+    // ?�든 ?�테?��? ?�?�머
     if (game->inHiddenStage) {
         game->hiddenStageTimer--;
         if (game->hiddenStageTimer <= 0) {
@@ -615,7 +601,7 @@ void handleInput(GameState* game) {
                 if (game->player.onGround) {
                     int jumpPower = game->inHiddenStage ? -5 : JUMP_POWER;
                     game->player.velocityY = jumpPower;
-                    playSFX(SFX_JUMP);
+                    playSFX(SFX_JUMP); //[����] ���� ȿ���� �߻�
                     addParticle(game, game->player.x, game->player.y + 1, '.');
                 }
             }
@@ -630,7 +616,7 @@ void handleInput(GameState* game) {
             if (game->player.onGround) {
                 int jumpPower = game->inHiddenStage ? -5 : JUMP_POWER;
                 game->player.velocityY = jumpPower;
-                playSFX(SFX_JUMP);  
+                playSFX(SFX_JUMP);     // [����] ���� ȿ���� ���?
                 addParticle(game, game->player.x, game->player.y + 1, '.');
             }
         }
@@ -719,7 +705,7 @@ void checkGameOver(GameState* game) {
             game->player.invincibleTimer = 60;
         }
         else {
-            playSFX(SFX_DIE);
+            playSFX(SFX_DIE); //[����] ���� ȿ���� ���?
             game->gameOver = 1;
         }
     }
@@ -803,18 +789,20 @@ void initStage2(GameState* game) {
 
 void initHiddenStage(GameState* game) {
     game->inHiddenStage = 1;
-    game->hiddenStageTimer = 200; 
+    game->hiddenStageTimer = 200; // 10�?(200?�레??
     game->returnLevel = game->level;
     
+    // 간단???�랫??(바닥�?
     game->platformCount = 1;
     game->platforms[0].x = 1;
     game->platforms[0].y = HEIGHT - 2;
     game->platforms[0].width = WIDTH - 2;
     game->platforms[0].active = 1;
     
+    // 몬스???�음
     game->enemyCount = 0;
     
-
+    // 코인 50�?(많이!)
     for (int i = 0; i < MAX_COINS; i++) {
         game->coins[i].collected = 1;
     }
@@ -825,10 +813,10 @@ void initHiddenStage(GameState* game) {
         game->coins[i].collected = 0;
     }
     
-
+    // ?�탈 비활?�화
     game->portal.active = 0;
     
-
+    // ?�레?�어 ?�치
     game->player.x = 5;
     game->player.y = HEIGHT - 3;
 }

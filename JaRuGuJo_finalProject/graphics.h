@@ -5,12 +5,17 @@
 #include <windows.h>
 #include "game.h"
 
+// ================================================
+// 더블 버퍼링용 화면 버퍼
+// ================================================
 extern char screenBuffer[HEIGHT + 4][WIDTH + 1];
 extern char prevBuffer[HEIGHT + 4][WIDTH + 1];
 extern int colorBuffer[HEIGHT + 4][WIDTH + 1];
 extern int prevColorBuffer[HEIGHT + 4][WIDTH + 1];
 
+// ================================================
 // 함수 선언
+// ================================================
 void gotoxy(int x, int y);
 void hideCursor();
 void setColor(int color);

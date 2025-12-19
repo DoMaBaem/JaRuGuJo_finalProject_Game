@@ -1,10 +1,10 @@
-SS 150
 ds 250
-SD 1250
 /sfs 650
+SD 1250
+DD 1300
 sfd 750
 dad 2300
 dfs 2700
-DD 1300
+kk 1400
 dfsd 1400
 s 12600

@@ -8,6 +8,9 @@
 #include <time.h>
 #include <string.h>
 
+// ================================================
+// 게임 상수 정의
+// ================================================
 #define WIDTH 80
 #define HEIGHT 25
 #define GRAVITY 1
@@ -17,6 +20,9 @@
 #define MAX_PARTICLES 50
 #define JUMP_POWER -3
 
+// ================================================
+// 플레이어 구조체
+// ================================================
 typedef struct {
     int x, y;
     int velocityY;
@@ -32,12 +38,19 @@ typedef struct {
     char name[50];
 } Player;
 
+// ================================================
+// 플랫폼 구조체
+// ================================================
 typedef struct {
     int x, y;
     int width;
     int active;
 } Platform;
 
+// ================================================
+// 몬스터 구조체
+// Type 0: 일반 몬스터, Type 1: 추적 몬스터, Type 2: 비행 몬스터
+// ================================================
 typedef struct {
     int x, y;
     int velocityX;
@@ -51,16 +64,25 @@ typedef struct {
     int spawnY;
 } Enemy;
 
+// ================================================
+// 코인 구조체
+// ================================================
 typedef struct {
     int x, y;
     int collected;
 } Coin;
 
+// ================================================
+// 포탈 구조체
+// ================================================
 typedef struct {
     int x, y;
     int active;
 } Portal;
 
+// ================================================
+// 파티클 구조체
+// ================================================
 typedef struct {
     int x, y;
     int velocityX, velocityY;
@@ -68,6 +90,9 @@ typedef struct {
     char symbol;
 } Particle;
 
+// ================================================
+// 게임 상태 구조체
+// ================================================
 typedef struct {
     Player player;
     Platform platforms[MAX_PLATFORMS];
@@ -88,7 +113,9 @@ typedef struct {
     int returnLevel;
 } GameState;
 
+// ================================================
 // 함수 선언
+// ================================================
 void initGame(GameState* game);
 void initPlayer(Player* player);
 void initPlatforms(GameState* game);
