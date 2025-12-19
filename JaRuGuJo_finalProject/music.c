@@ -10,7 +10,7 @@ void playBGM() {
     mciSendString("close " BGM_ALIAS, NULL, 0, NULL);
 
     // BGM 파일 열기
-    if (mciSendString("open \"bgm.mp3\" type mpegvideo alias " BGM_ALIAS, NULL, 0, NULL) != 0) {
+    if (mciSendString("open \".\\mainstage.wav\" type mpegvideo alias " BGM_ALIAS, NULL, 0, NULL) != 0) {
         printf("Error: Cannot open BGM file.\n");
         return;
     }
@@ -34,10 +34,10 @@ void playSFX(SoundEffectType type) {
         soundPath = "jump.wav";
         break;
     case SFX_HIT:
-        soundPath = "hit.wav";
+        soundPath = "hitsound.wav";
         break;
     case SFX_DIE:
-        soundPath = "die.wav";
+        soundPath = "deadsound.wav";
         break;
     default:
         return;

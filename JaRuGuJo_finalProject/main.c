@@ -33,7 +33,13 @@ void run() {
     setColor(15);
     printf("   Enter your name: ");
     scanf("%s", playerName);
-
+    FILE* fp = fopen("mainstage.wav", "r");
+if (fp == NULL) {
+    printf("\n [경고] mainstage.wav 파일을 찾을 수 없습니다! 폴더를 확인하세요.\n");
+    _getch();
+} else {
+    fclose(fp);
+}
     // 기존 랭킹 데이터 로드 (rankings.txt에서 읽기)
     loadRankings(&rankings);  // O(N log 10), N = 파일의 데이터 개수
 
