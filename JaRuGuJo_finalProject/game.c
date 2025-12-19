@@ -613,7 +613,7 @@ void handleInput(GameState* game) {
             }
             if (key == 72) {
                 if (game->player.onGround) {
-                    int jumpPower = game->inHiddenStage ? -5 : JUMP_POWER;
+                    int jumpPower = game->inHiddenStage ? -5 : (game->level == 2 ? -4 : JUMP_POWER);
                     game->player.velocityY = jumpPower;
                     playSFX(SFX_JUMP);
                     addParticle(game, game->player.x, game->player.y + 1, '.');
@@ -628,7 +628,7 @@ void handleInput(GameState* game) {
 
         if (key == ' ') {
             if (game->player.onGround) {
-                int jumpPower = game->inHiddenStage ? -5 : JUMP_POWER;
+                int jumpPower = game->inHiddenStage ? -5 : (game->level == 2 ? -4 : JUMP_POWER);
                 game->player.velocityY = jumpPower;
                 playSFX(SFX_JUMP);  
                 addParticle(game, game->player.x, game->player.y + 1, '.');
@@ -647,8 +647,9 @@ void handleInput(GameState* game) {
         
         if (key == 'w' || key == 'W') {
             if (game->player.onGround) {
-                int jumpPower = game->inHiddenStage ? -5 : JUMP_POWER;
+                int jumpPower = game->inHiddenStage ? -5 : (game->level == 2 ? -4 : JUMP_POWER);
                 game->player.velocityY = jumpPower;
+                playSFX(SFX_JUMP);
                 addParticle(game, game->player.x, game->player.y + 1, '.');
             }
         }
@@ -806,6 +807,12 @@ void initHiddenStage(GameState* game) {
     game->hiddenStageTimer = 200; 
     game->returnLevel = game->level;
     
+    // 현재 코인 상태 백업
+    game->savedCoinCount = game->coinCount;
+    for (int i = 0; i < game->coinCount; i++) {
+        game->savedCoins[i] = game->coins[i];
+    }
+    
     game->platformCount = 1;
     game->platforms[0].x = 1;
     game->platforms[0].y = HEIGHT - 2;
@@ -841,7 +848,11 @@ void returnFromHiddenStage(GameState* game) {
     if (game->level == 1) {
         initPlatforms(game);
         initEnemies(game);
-        initCoins(game);
+        // 코인 상태 복원
+        game->coinCount = game->savedCoinCount;
+        for (int i = 0; i < game->savedCoinCount; i++) {
+            game->coins[i] = game->savedCoins[i];
+        }
     } else {
         initStage2(game);
     }

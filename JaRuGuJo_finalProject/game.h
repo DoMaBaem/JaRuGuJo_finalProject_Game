@@ -111,6 +111,8 @@ typedef struct {
     int inHiddenStage;
     int hiddenStageTimer;
     int returnLevel;
+    Coin savedCoins[MAX_COINS];
+    int savedCoinCount;
 } GameState;
 
 // ================================================
