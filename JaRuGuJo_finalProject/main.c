@@ -13,7 +13,9 @@
 void run();
 void showMenu(MinHeap* rankings);
 
-void showMenu(MinHeap* rankings) {
+
+// 게임 시작 전 메뉴 홤녀을 표시하는 함수 -  MinHeap 포인터를 받아 랭킹 조회 기능을 제공
+void showMenu(MinHeap* rankings) { 
     int selected = 0;
 
     while (1) {
@@ -77,7 +79,13 @@ void showMenu(MinHeap* rankings) {
     }
 }
 
-void run() {
+
+// 게임의 메인 실행 함수, 게임 초기화부터 종료까지 전체 흐름을 관리
+void run() { 
+    // game: 게임 상태 (플레이어, 몬스터, 코인 등 모든 정보)
+    // rankings: 랭킹 데이터(Min Heap 구조)
+    // playerName : 플레이어 이름(최대 50자)
+    // playAgain : 재시작 여부(1: 계속, 0 : 종료)
     GameState game;
     MinHeap rankings;
     char playerName[50];
@@ -88,14 +96,6 @@ void run() {
 
     loadRankings(&rankings);
 
-    // WAV 파일 존재 확인
-    FILE* fp = fopen("mainstage.wav", "r");
-    if (fp == NULL) {
-        printf("\n [경고] mainstage.wav 파일을 찾을 수 없습니다! 폴더를 확인하세요.\n");
-        _getch();
-    } else {
-        fclose(fp);
-    }
 
     while (playAgain) {
         system("cls");
